@@ -1,0 +1,128 @@
+[
+  {
+    "customerId": "CUST-0001",
+    "firstName": "Margaret",
+    "lastName": "Thompson",
+    "email": "m.thompson@email.com",
+    "phone": "555-210-4831",
+    "address": {
+      "street": "1842 Maple Grove Drive",
+      "city": "Columbus",
+      "state": "OH",
+      "zip": "43215",
+      "country": "USA"
+    },
+    "registrationDate": "2022-03-15",
+    "preferredContact": "email",
+    "customerTier": "standard",
+    "totalWarranties": 2,
+    "totalClaims": 1,
+    "active": true,
+    "notes": ""
+  },
+  {
+    "customerId": "CUST-0002",
+    "firstName": "Robert",
+    "lastName": "Garcia",
+    "email": "rgarcia@homemail.net",
+    "phone": "555-374-9922",
+    "address": {
+      "street": "507 Sunflower Lane",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip": "85004",
+      "country": "USA"
+    },
+    "registrationDate": "2021-08-20",
+    "preferredContact": "phone",
+    "customerTier": "premium",
+    "totalWarranties": 4,
+    "totalClaims": 2,
+    "active": true,
+    "notes": "Loyal customer, prioritize service scheduling"
+  },
+  {
+    "customerId": "CUST-0003",
+    "firstName": "Linda",
+    "lastName": "Patel",
+    "email": "lpatel@techworkers.org",
+    "phone": "555-819-3307",
+    "address": {
+      "street": "3309 Elmwood Court",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip": "30301",
+      "country": "USA"
+    },
+    "registrationDate": "2023-01-10",
+    "preferredContact": "email",
+    "customerTier": "standard",
+    "totalWarranties": 1,
+    "totalClaims": 0,
+    "active": true,
+    "notes": ""
+  },
+  {
+    "customerId": "CUST-0004",
+    "firstName": "James",
+    "lastName": "Whitfield",
+    "email": "jwhitfield@outlook.com",
+    "phone": "555-662-1588",
+    "address": {
+      "street": "88 Riverside Blvd",
+      "city": "Chicago",
+      "state": "IL",
+      "zip": "60601",
+      "country": "USA"
+    },
+    "registrationDate": "2020-11-05",
+    "preferredContact": "email",
+    "customerTier": "elite",
+    "totalWarranties": 6,
+    "totalClaims": 3,
+    "active": true,
+    "notes": "Building manager, handles multiple units"
+  },
+  {
+    "customerId": "CUST-0005",
+    "firstName": "Susan",
+    "lastName": "Nakamura",
+    "email": "snakamura@gmail.com",
+    "phone": "555-441-7730",
+    "address": {
+      "street": "2215 Oak Hill Road",
+      "city": "Seattle",
+      "state": "WA",
+      "zip": "98101",
+      "country": "USA"
+    },
+    "registrationDate": "2023-06-28",
+    "preferredContact": "phone",
+    "customerTier": "standard",
+    "totalWarranties": 1,
+    "totalClaims": 1,
+    "active": true,
+    "notes": ""
+  },
+  {
+    "customerId": "CUST-0006",
+    "firstName": "David",
+    "lastName": "Okonkwo",
+    "email": "d.okonkwo@familynet.com",
+    "phone": "555-993-2241",
+    "address": {
+      "street": "614 Heritage Park Way",
+      "city": "Dallas",
+      "state": "TX",
+      "zip": "75201",
+      "country": "USA"
+    },
+    "registrationDate": "2022-09-14",
+    "preferredContact": "email",
+    "customerTier": "standard",
+    "totalWarranties": 3,
+    "totalClaims": 1,
+    "active": true,
+    "notes": ""
+  }
+]

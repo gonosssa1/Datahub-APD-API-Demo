@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APD Warranty Management</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-icon">&#9741;</span>
+      <div>
+        <div class="brand-name">APD Warranty Management</div>
+        <div class="brand-sub">Asset Protection Division &mdash; Consumer Appliances</div>
+      </div>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+      <button class="nav-btn" data-section="customers">Customers</button>
+      <button class="nav-btn" data-section="warranties">Warranties</button>
+      <button class="nav-btn" data-section="claims">Claims</button>
+      <button class="nav-btn" data-section="repair-orders">Repair Orders</button>
+      <button class="nav-btn" data-section="service-centers">Service Centers</button>
+      <button class="nav-btn" data-section="api-explorer">API Explorer</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ─── DASHBOARD ─────────────────────────────────────────────── -->
+  <section id="section-dashboard" class="section active">
+    <div class="section-header">
+      <h2>Executive Dashboard</h2>
+      <button class="btn btn-sm" onclick="loadDashboard()">&#x21bb; Refresh</button>
+    </div>
+    <div id="dashboard-alerts" class="alert-row"></div>
+    <div id="dashboard-stats" class="stats-grid"></div>
+    <div class="two-col">
+      <div class="card">
+        <h3>Claims by Status</h3>
+        <div id="claims-by-status"></div>
+      </div>
+      <div class="card">
+        <h3>Warranties by Type</h3>
+        <div id="warranties-by-type"></div>
+      </div>
+    </div>
+    <div class="card mt">
+      <h3>Warranties Expiring Within 30 Days</h3>
+      <div id="expiring-warranties"></div>
+    </div>
+    <div class="card mt">
+      <h3>Replacement Candidates</h3>
+      <div id="replacement-candidates"></div>
+    </div>
+  </section>
+
+  <!-- ─── CUSTOMERS ─────────────────────────────────────────────── -->
+  <section id="section-customers" class="section">
+    <div class="section-header">
+      <h2>Customers</h2>
+      <button class="btn" onclick="showModal('modal-new-customer')">+ New Customer</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="customer-search" placeholder="Search by name or email..." oninput="filterCustomers()">
+      <select id="customer-tier-filter" onchange="filterCustomers()">
+        <option value="">All Tiers</option>
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+        <option value="elite">Elite</option>
+      </select>
+    </div>
+    <div id="customers-table-wrap"></div>
+
+    <div id="customer-detail" class="detail-panel hidden">
+      <button class="close-btn" onclick="closeDetail('customer-detail')">&#x2715; Close</button>
+      <div id="customer-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- ─── WARRANTIES ────────────────────────────────────────────── -->
+  <section id="section-warranties" class="section">
+    <div class="section-header">
+      <h2>Warranties</h2>
+      <div>
+        <button class="btn btn-outline" onclick="openVerifyModal()">&#10003; Verify Coverage</button>
+        <button class="btn" onclick="showModal('modal-new-warranty')">+ Register Warranty</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <select id="warranty-status-filter" onchange="loadWarranties()">
+        <option value="">All Statuses</option>
+        <option value="active">Active</option>
+        <option value="expired">Expired</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <select id="warranty-type-filter" onchange="loadWarranties()">
+        <option value="">All Types</option>
+        <option value="standard">Standard</option>
+        <option value="extended">Extended</option>
+        <option value="premium">Premium</option>
+      </select>
+      <label><input type="checkbox" id="warranty-expiring-filter" onchange="loadWarranties()"> Expiring Soon (30d)</label>
+    </div>
+    <div id="warranties-table-wrap"></div>
+
+    <div id="warranty-detail" class="detail-panel hidden">
+      <button class="close-btn" onclick="closeDetail('warranty-detail')">&#x2715; Close</button>
+      <div id="warranty-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- ─── CLAIMS ────────────────────────────────────────────────── -->
+  <section id="section-claims" class="section">
+    <div class="section-header">
+      <h2>Claims</h2>
+      <button class="btn" onclick="showModal('modal-new-claim')">+ File Claim</button>
+    </div>
+    <div class="search-bar">
+      <select id="claim-status-filter" onchange="loadClaims()">
+        <option value="">All Statuses</option>
+        <option value="pending_approval">Pending Approval</option>
+        <option value="approved">Approved</option>
+        <option value="in_repair">In Repair</option>
+        <option value="parts_ordered">Parts Ordered</option>
+        <option value="completed">Completed</option>
+        <option value="denied">Denied</option>
+        <option value="closed">Closed</option>
+      </select>
+      <select id="claim-issue-filter" onchange="loadClaims()">
+        <option value="">All Issue Types</option>
+        <option value="mechanical_failure">Mechanical Failure</option>
+        <option value="electrical_failure">Electrical Failure</option>
+        <option value="accidental_damage">Accidental Damage</option>
+        <option value="power_surge">Power Surge</option>
+        <option value="food_spoilage">Food Spoilage</option>
+      </select>
+      <label><input type="checkbox" id="claim-open-filter" onchange="loadClaims()"> Open Only</label>
+    </div>
+    <div id="claims-table-wrap"></div>
+
+    <div id="claim-detail" class="detail-panel hidden">
+      <button class="close-btn" onclick="closeDetail('claim-detail')">&#x2715; Close</button>
+      <div id="claim-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- ─── REPAIR ORDERS ─────────────────────────────────────────── -->
+  <section id="section-repair-orders" class="section">
+    <div class="section-header">
+      <h2>Repair Orders</h2>
+      <button class="btn" onclick="showModal('modal-new-repair-order')">+ New Repair Order</button>
+    </div>
+    <div class="search-bar">
+      <select id="ro-status-filter" onchange="loadRepairOrders()">
+        <option value="">All Statuses</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="in_progress">In Progress</option>
+        <option value="parts_ordered">Parts Ordered</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <label><input type="checkbox" id="ro-open-filter" onchange="loadRepairOrders()"> Open Only</label>
+    </div>
+    <div id="repair-orders-table-wrap"></div>
+
+    <div id="ro-detail" class="detail-panel hidden">
+      <button class="close-btn" onclick="closeDetail('ro-detail')">&#x2715; Close</button>
+      <div id="ro-detail-content"></div>
+    </div>
+  </section>
+
+  <!-- ─── SERVICE CENTERS ───────────────────────────────────────── -->
+  <section id="section-service-centers" class="section">
+    <div class="section-header">
+      <h2>Service Centers</h2>
+      <button class="btn btn-outline" onclick="openDispatchModal()">&#9873; Dispatch Recommend</button>
+    </div>
+    <div id="service-centers-grid"></div>
+  </section>
+
+  <!-- ─── API EXPLORER ──────────────────────────────────────────── -->
+  <section id="section-api-explorer" class="section">
+    <div class="section-header">
+      <h2>API Explorer</h2>
+      <span class="subtitle">Send requests to the live API endpoints</span>
+    </div>
+    <div class="api-explorer">
+      <div class="api-form card">
+        <div class="form-row">
+          <select id="api-method" style="width:100px">
+            <option>GET</option><option>POST</option><option>PUT</option><option>DELETE</option>
+          </select>
+          <input type="text" id="api-endpoint" placeholder="/api/reports/dashboard" style="flex:1">
+          <button class="btn" onclick="sendApiRequest()">Send</button>
+        </div>
+        <div class="form-group">
+          <label>Request Body (JSON)</label>
+          <textarea id="api-body" rows="6" placeholder='{"key": "value"}'></textarea>
+        </div>
+        <div class="quick-links">
+          <strong>Quick Links:</strong>
+          <button class="chip" onclick="setApi('GET','/api/reports/dashboard')">Dashboard</button>
+          <button class="chip" onclick="setApi('GET','/api/customers')">Customers</button>
+          <button class="chip" onclick="setApi('GET','/api/warranties?status=active')">Active Warranties</button>
+          <button class="chip" onclick="setApi('GET','/api/claims?open=true')">Open Claims</button>
+          <button class="chip" onclick="setApi('GET','/api/reports/claims-summary')">Claims Summary</button>
+          <button class="chip" onclick="setApi('GET','/api/reports/replacement-candidates')">Replacements</button>
+          <button class="chip" onclick="setApi('GET','/api/service-centers/dispatch/recommend?productCategory=refrigerator')">Dispatch</button>
+          <button class="chip" onclick="setApi('POST','/api/warranties/verify','{\"warrantyId\":\"WRN-10001\",\"issueType\":\"mechanical_failure\"}')">Verify</button>
+        </div>
+      </div>
+      <div class="api-response card">
+        <div class="response-header">
+          <span>Response</span>
+          <span id="api-status-badge" class="status-badge"></span>
+        </div>
+        <pre id="api-response-output">// Response will appear here</pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ─── MODALS ──────────────────────────────────────────────────────────────── -->
+
+<div id="modal-new-customer" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Register New Customer</h3><button class="close-btn" onclick="hideModal('modal-new-customer')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input type="text" id="nc-firstName" required></div>
+        <div class="form-group"><label>Last Name *</label><input type="text" id="nc-lastName" required></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Email *</label><input type="email" id="nc-email" required></div>
+        <div class="form-group"><label>Phone</label><input type="text" id="nc-phone"></div>
+      </div>
+      <div class="form-group"><label>Street Address</label><input type="text" id="nc-street"></div>
+      <div class="form-row">
+        <div class="form-group"><label>City</label><input type="text" id="nc-city"></div>
+        <div class="form-group"><label>State</label><input type="text" id="nc-state" maxlength="2"></div>
+        <div class="form-group"><label>ZIP</label><input type="text" id="nc-zip"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Preferred Contact</label>
+          <select id="nc-preferredContact"><option value="email">Email</option><option value="phone">Phone</option></select>
+        </div>
+        <div class="form-group"><label>Tier</label>
+          <select id="nc-tier"><option value="standard">Standard</option><option value="premium">Premium</option><option value="elite">Elite</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-new-customer')">Cancel</button>
+      <button class="btn" onclick="submitNewCustomer()">Register Customer</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-new-warranty" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Register Warranty</h3><button class="close-btn" onclick="hideModal('modal-new-warranty')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Customer ID *</label><input type="text" id="nw-customerId" placeholder="CUST-0001"></div>
+        <div class="form-group"><label>Product ID *</label><input type="text" id="nw-productId" placeholder="PRD-001"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Serial Number *</label><input type="text" id="nw-serialNumber"></div>
+        <div class="form-group"><label>Purchase Date *</label><input type="date" id="nw-purchaseDate"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Purchase Price</label><input type="number" id="nw-purchasePrice" step="0.01"></div>
+        <div class="form-group"><label>Retailer</label><input type="text" id="nw-retailer"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Warranty Type *</label>
+          <select id="nw-warrantyType"><option value="standard">Standard</option><option value="extended">Extended</option><option value="premium">Premium</option></select>
+        </div>
+        <div class="form-group"><label>Coverage End Date</label><input type="date" id="nw-coverageEndDate"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Deductible ($)</label><input type="number" id="nw-deductible" step="0.01" value="75"></div>
+        <div class="form-group"><label>Premium Paid ($)</label><input type="number" id="nw-premiumPaid" step="0.01" value="0"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-new-warranty')">Cancel</button>
+      <button class="btn" onclick="submitNewWarranty()">Register Warranty</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-new-claim" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header"><h3>File Warranty Claim</h3><button class="close-btn" onclick="hideModal('modal-new-claim')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Warranty ID *</label><input type="text" id="cl-warrantyId" placeholder="WRN-10001"></div>
+        <div class="form-group"><label>Customer ID *</label><input type="text" id="cl-customerId" placeholder="CUST-0001"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Issue Type *</label>
+          <select id="cl-issueType">
+            <option value="mechanical_failure">Mechanical Failure</option>
+            <option value="electrical_failure">Electrical Failure</option>
+            <option value="accidental_damage">Accidental Damage</option>
+            <option value="cosmetic_damage">Cosmetic Damage</option>
+            <option value="food_spoilage">Food Spoilage</option>
+            <option value="power_surge">Power Surge</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Issue Category</label><input type="text" id="cl-issueCategory" placeholder="e.g. ice_maker, motor"></div>
+      </div>
+      <div class="form-group"><label>Description *</label><textarea id="cl-description" rows="4" placeholder="Describe the issue in detail..."></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label>Priority</label>
+          <select id="cl-priority"><option value="standard">Standard</option><option value="high">High</option><option value="urgent">Urgent</option></select>
+        </div>
+        <div class="form-group"><label>Claim Date</label><input type="date" id="cl-claimDate"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-new-claim')">Cancel</button>
+      <button class="btn" onclick="submitNewClaim()">File Claim</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-verify-coverage" class="modal hidden">
+  <div class="modal-box" style="max-width:520px">
+    <div class="modal-header"><h3>Verify Coverage</h3><button class="close-btn" onclick="hideModal('modal-verify-coverage')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Warranty ID *</label><input type="text" id="vc-warrantyId" placeholder="WRN-10001"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Claim Date</label><input type="date" id="vc-claimDate"></div>
+        <div class="form-group"><label>Issue Type</label>
+          <select id="vc-issueType">
+            <option value="">-- Any --</option>
+            <option value="mechanical_failure">Mechanical Failure</option>
+            <option value="electrical_failure">Electrical Failure</option>
+            <option value="accidental_damage">Accidental Damage</option>
+            <option value="cosmetic_damage">Cosmetic Damage</option>
+            <option value="food_spoilage">Food Spoilage</option>
+            <option value="power_surge">Power Surge</option>
+          </select>
+        </div>
+      </div>
+      <div id="verify-result" class="verify-result hidden"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-verify-coverage')">Close</button>
+      <button class="btn" onclick="submitVerify()">Check Coverage</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-new-repair-order" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header"><h3>Create Repair Order</h3><button class="close-btn" onclick="hideModal('modal-new-repair-order')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Claim ID *</label><input type="text" id="ro-claimId" placeholder="CLM-20001"></div>
+        <div class="form-group"><label>Service Center ID *</label><input type="text" id="ro-serviceCenterId" placeholder="SVC-001"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Technician ID</label><input type="text" id="ro-technicianId" placeholder="TECH-001"></div>
+        <div class="form-group"><label>Scheduled Date *</label><input type="date" id="ro-scheduledDate"></div>
+      </div>
+      <div class="form-group"><label>Diagnosis / Notes</label><textarea id="ro-diagnosis" rows="3"></textarea></div>
+      <div class="form-group"><label>Deductible Collected ($)</label><input type="number" id="ro-deductible" step="0.01" value="0"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-new-repair-order')">Cancel</button>
+      <button class="btn" onclick="submitNewRepairOrder()">Create Order</button>
+    </div>
+  </div>
+</div>
+
+<div id="modal-dispatch" class="modal hidden">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-header"><h3>Dispatch Recommendation</h3><button class="close-btn" onclick="hideModal('modal-dispatch')">&#x2715;</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Product Category *</label>
+          <select id="dp-category">
+            <option value="refrigerator">Refrigerator</option>
+            <option value="washer">Washer</option>
+            <option value="dryer">Dryer</option>
+            <option value="dishwasher">Dishwasher</option>
+            <option value="range">Range/Oven</option>
+            <option value="microwave">Microwave</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Brand</label><input type="text" id="dp-brand" placeholder="e.g. LG"></div>
+        <div class="form-group"><label>State</label><input type="text" id="dp-state" placeholder="e.g. OH" maxlength="2"></div>
+      </div>
+      <div id="dispatch-results"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="hideModal('modal-dispatch')">Close</button>
+      <button class="btn" onclick="submitDispatch()">Find Centers</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
